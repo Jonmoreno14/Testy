@@ -182,6 +182,8 @@ def drawFraction(windowName, question, sliderFraction):
         x=(ScreenWidth / 2) - (canvas.winfo_reqwidth() / 2), y=(ScreenHeight / 6),
     )
 
+    canvas.create_rectangle(0, 0, canWidth / denominator, canHeight, fill="green")
+
     l = canWidth / denominator
     x = 1
     for x in range(denominator):
@@ -228,7 +230,7 @@ def drawFraction(windowName, question, sliderFraction):
             windowName.after(70, update, ind)
 
         gif = Label(windowName)
-        gif.place(x=100, y=300)
+        gif.place(x=1010, y=890)
         windowName.after(0, update, 0)
         windowName.mainloop()
 
