@@ -114,18 +114,18 @@ def lvl1Window():
 
     def show(val):
         numBox.configure(text=val)
-        drawFraction(lvl1, questionLabel.cget("text"), numBox.cget("text"))
+        drawFraction(numBox.cget("text"), questionLabel.cget("text"))
 
     def newQuestionFunc():
         randomQuestion = Fractions.level1()
         questionLabel.configure(text=randomQuestion)
-        drawFraction(lvl1, questionLabel.cget("text"), numBox.cget("text"))
+        drawFraction(numBox.cget("text"), questionLabel.cget("text"))
 
     slider = Scale(
         lvl1,
         orient=HORIZONTAL,
         from_=1,
-        to=18,
+        to=12,
         command=show,
         width=25,
         length=(ScreenWidth / 2),
@@ -150,10 +150,96 @@ def lvl1Window():
         x=(ScreenWidth / 2) - (numBox.winfo_reqwidth() / 2), y=(ScreenHeight / 4) * 3
     )
 
-    drawFraction(
-        lvl1, questionLabel.cget("text"), numBox.cget("text"),
+    options = ["Blue", "Green", "Red", "Yellow"]
+    colorVar = StringVar(lvl1)
+    colorVar.set(options[0])
+    colorSelector = OptionMenu(lvl1, colorVar, *options)
+    colorSelector.config(width=15)
+    colorSelector.place(x=ScreenWidth / 70, y=ScreenHeight / 3)
+    colorSelectorLabel = Label(lvl1, text="Color Selector:", font=("Ariel", 14)).place(
+        x=(ScreenWidth / 70) + (colorSelector.winfo_reqwidth() / (14 / 3)),
+        y=ScreenHeight / (10 / 3),
     )
 
+    def drawFraction(val, question):
+        currFraction = question.split("/")  # took string split into array
+        numerator = int(currFraction[0])  # turning the str numer. to int
+        denominator = int(currFraction[1])  # same as ^ but denom.
+        sliderFraction = int(val)
+        canWidth = ScreenWidth / 2
+        canHeight = (ScreenHeight / 100) * 48  # 540
+        canvas = Canvas(
+            lvl1,
+            bg="gray",
+            width=canWidth,
+            height=canHeight,
+            highlightbackground="black",
+        )
+        canvas.place(
+            x=(ScreenWidth / 2) - (canvas.winfo_reqwidth() / 2), y=(ScreenHeight / 6),
+        )
+
+        x = 1
+        n = canWidth / sliderFraction
+        l = canWidth / denominator
+
+        rec = canvas.create_rectangle(
+            0,
+            0,
+            (canWidth / denominator) * numerator,
+            canHeight + 10,
+            fill=str(colorVar.get()),
+        )
+        lvl1.update_idletasks
+
+        for x in range(denominator):
+            canvas.create_line((l * x), 0, (l * x), 1000, width=3, dash=(14, 18))
+            END
+
+        for x in range(sliderFraction):
+            canvas.create_line((n * x), 0, (n * x), 1000, width=3, fill="Black")
+            END
+
+        def checkAnswerFunc():
+            if sliderFraction % denominator == 0:
+                print("Correct")
+                FireworkAnimation()
+            else:
+                print("Wrong")
+
+        checkAnswerBtn = Button(
+            lvl1,
+            text="Check Answer",
+            width=(int((ScreenWidth) / 140)),
+            height=(int((ScreenHeight) / 290)),
+            font=("Ariel", 14),
+            command=checkAnswerFunc,
+        )
+        checkAnswerBtn.place(
+            x=((ScreenWidth / 3) * 2) - (checkAnswerBtn.winfo_reqwidth()),
+            y=(ScreenHeight / (21 / 18)),
+        )
+
+        def FireworkAnimation():
+            frames = [
+                PhotoImage(file="fireworksImages/fireworks%i.png" % (i))
+                for i in range(29)
+            ]
+
+            def update(ind):
+                frame = frames[ind]
+                ind += 1
+                gif.configure(image=frame)
+                # make gif transparent background, for MAC ONLY!, comment the line below
+                gif.config(bg="systemTransparent")
+                # gif.wm_attributes("-transparentcolor", "white") # for WINDOWS!
+                lvl1.after(70, update, ind)
+
+            gif = Label(lvl1)
+            gif.place(x=1010, y=890)
+            lvl1.after(0, update, 0)
+
+    drawFraction(numBox.cget("text"), questionLabel.cget("text"))
     lvl1.mainloop()
 
 
@@ -163,99 +249,6 @@ def lvl2Window():
 
 def lvl3Window():
     pass
-
-
-def drawFraction(windowName, question, sliderFraction):
-    ScreenWidth = windowName.winfo_screenwidth()
-    ScreenHeight = windowName.winfo_screenheight()
-    currFraction = question.split("/")  # took string split into array
-    numerator = int(currFraction[0])  # turning the str numer. to int
-    denominator = int(currFraction[1])  # same as ^ but denom.
-    sliderFraction = int(sliderFraction)
-    canWidth = ScreenWidth / 2
-    canHeight = (ScreenHeight / 100) * 48  # 540
-    canvas = Canvas(
-        windowName,
-        bg="gray",
-        width=canWidth,
-        height=canHeight,
-        highlightbackground="black",
-    )
-    canvas.place(
-        x=(ScreenWidth / 2) - (canvas.winfo_reqwidth() / 2), y=(ScreenHeight / 6),
-    )
-
-    options = ["Blue", "Green", "Red", "Yellow"]
-    colorVar = StringVar(windowName)
-    colorVar.set(options[0])
-    colorSelector = OptionMenu(windowName, colorVar, *options)
-    colorSelector.config(width=15)
-    colorSelector.place(x=ScreenWidth / 70, y=ScreenHeight / 3)
-    colorSelectorLabel = Label(
-        windowName, text="Color Selector:", font=("Ariel", 14)
-    ).place(
-        x=(ScreenWidth / 70) + (colorSelector.winfo_reqwidth() / (14 / 3)),
-        y=ScreenHeight / (10 / 3),
-    )
-
-    x = 1
-    n = canWidth / sliderFraction
-    l = canWidth / denominator
-
-    rec = canvas.create_rectangle(
-        0,
-        0,
-        (canWidth / denominator) * numerator,
-        canHeight + 10,
-        fill=str(colorVar.get()),
-    )
-
-    for x in range(denominator):
-        canvas.create_line((l * x), 0, (l * x), 1000, width=3, dash=(14, 18))
-        END
-
-    for x in range(sliderFraction):
-        canvas.create_line((n * x), 0, (n * x), 1000, width=3, fill="Black")
-        END
-
-    def checkAnswerFunc():
-        if sliderFraction % denominator == 0:
-            print("Correct")
-            FireworkAnimation()
-        else:
-            print("Wrong")
-
-    checkAnswerBtn = Button(
-        windowName,
-        text="Check Answer",
-        width=(int((ScreenWidth) / 140)),
-        height=(int((ScreenHeight) / 290)),
-        font=("Ariel", 14),
-        command=checkAnswerFunc,
-    )
-    checkAnswerBtn.place(
-        x=((ScreenWidth / 3) * 2) - (checkAnswerBtn.winfo_reqwidth()),
-        y=(ScreenHeight / (21 / 18)),
-    )
-
-    def FireworkAnimation():
-        frames = [
-            PhotoImage(file="fireworksImages/fireworks%i.png" % (i)) for i in range(29)
-        ]
-
-        def update(ind):
-            frame = frames[ind]
-            ind += 1
-            gif.configure(image=frame)
-            # make gif transparent background, for MAC ONLY!, comment the line below
-            gif.config(bg="systemTransparent")
-            # gif.wm_attributes("-transparentcolor", "white") # for WINDOWS!
-            windowName.after(70, update, ind)
-
-        gif = Label(windowName)
-        gif.place(x=1010, y=890)
-        windowName.after(0, update, 0)
-        windowName.mainloop()
 
 
 menuWindow()
