@@ -6,11 +6,12 @@ from pathlib import Path, PureWindowsPath
 import ctypes
 import os
 import time
+from tkinter import ttk
 
 
 def menuWindow():
     menu = Tk()
-    # ctypes.windll.shcore.SetProcessDpiAwareness(2)    uncomment, this is for windows!!!!!!
+    # ctypes.windll.shcore.SetProcessDpiAwareness(2)    #uncomment, this is for windows!!!!!!
     ScreenWidth = menu.winfo_screenwidth()
     ScreenHeight = menu.winfo_screenheight()
     menu.geometry("%dx%d+0+0" % (ScreenWidth, ScreenHeight))
@@ -149,7 +150,9 @@ def lvl1Window():
         x=(ScreenWidth / 2) - (numBox.winfo_reqwidth() / 2), y=(ScreenHeight / 4) * 3
     )
 
-    drawFraction(lvl1, questionLabel.cget("text"), numBox.cget("text"))
+    drawFraction(
+        lvl1, questionLabel.cget("text"), numBox.cget("text"),
+    )
 
     lvl1.mainloop()
 
@@ -182,17 +185,38 @@ def drawFraction(windowName, question, sliderFraction):
         x=(ScreenWidth / 2) - (canvas.winfo_reqwidth() / 2), y=(ScreenHeight / 6),
     )
 
-    canvas.create_rectangle(0, 0, canWidth / denominator, canHeight, fill="green")
+    options = ["Blue", "Green", "Red", "Yellow"]
+    colorVar = StringVar(windowName)
+    colorVar.set(options[0])
+    colorSelector = OptionMenu(windowName, colorVar, *options)
+    colorSelector.config(width=15)
+    colorSelector.place(x=ScreenWidth / 70, y=ScreenHeight / 3)
+    colorSelectorLabel = Label(
+        windowName, text="Color Selector:", font=("Ariel", 14)
+    ).place(
+        x=(ScreenWidth / 70) + (colorSelector.winfo_reqwidth() / (14 / 3)),
+        y=ScreenHeight / (10 / 3),
+    )
 
-    l = canWidth / denominator
     x = 1
+    j = 1
+    n = canWidth / sliderFraction
+    l = canWidth / denominator
+    for j in range(numerator):
+        rec = canvas.create_rectangle(
+            (l * x),
+            (0),
+            (canWidth / denominator) * j,
+            canHeight + 10,
+            fill=str(colorVar.get()),
+        )
+
     for x in range(denominator):
-        canvas.create_line((l * x), 0, (l * x), 1000, width=3, dash=(4, 4))
+        canvas.create_line((l * x), 0, (l * x), 1000, width=3, dash=(14, 18))
         END
 
-    n = canWidth / sliderFraction
     for x in range(sliderFraction):
-        canvas.create_line((n * x), 0, (n * x), 1000, width=3, fill="Blue")
+        canvas.create_line((n * x), 0, (n * x), 1000, width=3, fill="Black")
         END
 
     def checkAnswerFunc():
