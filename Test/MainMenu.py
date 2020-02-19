@@ -199,14 +199,13 @@ def drawFraction(windowName, question, sliderFraction):
     )
 
     x = 1
-    j = 1
     n = canWidth / sliderFraction
     l = canWidth / denominator
 
     rec = canvas.create_rectangle(
-        (l * numerator),
-        (0),
-        (canWidth / denominator) * j,
+        0,
+        0,
+        (canWidth / denominator) * numerator,
         canHeight + 10,
         fill=str(colorVar.get()),
     )
