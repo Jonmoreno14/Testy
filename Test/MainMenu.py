@@ -221,23 +221,39 @@ def lvl1Window():
         )
 
         def FireworkAnimation():
-            frames = [
-                PhotoImage(file="fireworksImages/fireworks%i.png" % (i))
-                for i in range(29)
-            ]
+            frameImagesPath = "fireworksImages"
+            spriteSheetPath = "fireworks"
+            imageType = ".png"
+            myImg = PhotoImage(
+                file=frameImagesPath + "/" + spriteSheetPath + str(0) + imageType
+            )
+            initX = canvas.winfo_width() / 2 - myImg.width() / 2
+            initX4 = initX3 = initX2 = initX1 = initX
+            initY = canvas.winfo_height() - myImg.height() / 4
+            initY4 = initY3 = initY2 = initY1 = initY
+            animationHold = 0
+            for i in range(29):
+                myImg = PhotoImage(
+                    file=frameImagesPath + "/" + spriteSheetPath + str(i) + imageType
+                )
+                canvas.create_image(initX, initY, image=myImg, anchor=NW)
+                canvas.create_image(initX1, initY1, image=myImg, anchor=NW)
+                canvas.create_image(initX2, initY2, image=myImg, anchor=NW)
+                canvas.create_image(initX3, initY3, image=myImg, anchor=NW)
+                canvas.create_image(initX4, initY4, image=myImg, anchor=NW)
+                initY = initY - 14
+                initY1 = initY1 - 12
+                initY2 = initY2 - 12
+                initY3 = initY3 - 7
+                initY4 = initY4 - 7
+                initX1 = initX1 - 6
+                initX2 = initX2 + 6
+                initX3 = initX3 - 12
+                initX4 = initX4 + 12
+                lvl1.update()
+                time.sleep(0.3 / 10)
 
-            def update(ind):
-                frame = frames[ind]
-                ind += 1
-                gif.configure(image=frame)
-                # make gif transparent background, for MAC ONLY!, comment the line below
-                gif.config(bg="systemTransparent")
-                # gif.wm_attributes("-transparentcolor", "white") # for WINDOWS!
-                lvl1.after(70, update, ind)
-
-            gif = Label(lvl1)
-            gif.place(x=1010, y=890)
-            lvl1.after(0, update, 0)
+        # def WrongAnswerAnimation():
 
     drawFraction(numBox.cget("text"), questionLabel.cget("text"))
     lvl1.mainloop()
