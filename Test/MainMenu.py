@@ -7,6 +7,7 @@ import ctypes
 import os
 import time
 from tkinter import ttk
+from PIL import ImageTk, Image
 
 
 def menuWindow():
@@ -202,7 +203,18 @@ def lvl1Window():
 
         def checkAnswerFunc():
             if sliderFraction % denominator == 0:
-                print("Correct")
+                equivNumerator = sliderFraction / denominator
+                equivFrac = int(equivNumerator) * numerator
+                string = "%i/%i" % (equivFrac, sliderFraction)
+                correctLabel = Label(
+                    lvl1,
+                    text="Correct! %s is equvilent to %s" % (question, string),
+                    font=("Ariel", 20),
+                )
+                correctLabel.place(
+                    x=(ScreenWidth / 2) - (correctLabel.winfo_reqwidth() / 2),
+                    y=(ScreenHeight / 3) * 2,
+                )
                 FireworkAnimation()
             else:
                 print("Wrong")
