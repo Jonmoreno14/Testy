@@ -110,7 +110,6 @@ def lvl1Window():
     ).pack(side=TOP, pady=10, padx=10, anchor=NW)
 
     numBox = Label(lvl1, text="1", font=("Ariel", 40))
-
     questionLabel = Label(lvl1, text="1/2", font=("Ariel", 36))
 
     def show(val):
@@ -157,7 +156,8 @@ def lvl1Window():
     colorSelector = OptionMenu(lvl1, colorVar, *options)
     colorSelector.config(width=15)
     colorSelector.place(x=ScreenWidth / 70, y=ScreenHeight / 3)
-    colorSelectorLabel = Label(lvl1, text="Color Selector:", font=("Ariel", 14)).place(
+    colorSelectorLabel = Label(lvl1, text="Color Selector:", font=("Ariel", 14),)
+    colorSelectorLabel.place(
         x=(ScreenWidth / 70) + (colorSelector.winfo_reqwidth() / (14 / 3)),
         y=ScreenHeight / (10 / 3),
     )
@@ -209,13 +209,17 @@ def lvl1Window():
                 correctLabel = Label(
                     lvl1,
                     text="Correct! %s is equvilent to %s" % (question, string),
-                    font=("Ariel", 20),
+                    bg="systemTransparent",
+                    font=("Ariel", 30),
                 )
                 correctLabel.place(
                     x=(ScreenWidth / 2) - (correctLabel.winfo_reqwidth() / 2),
                     y=(ScreenHeight / 3) * 2,
                 )
                 FireworkAnimation()
+                correctLabel.after(1000)
+                correctLabel.destroy()
+                # correctLabel.configure(text="")
             else:
                 print("Wrong")
 
@@ -280,3 +284,4 @@ def lvl3Window():
 
 
 menuWindow()
+
