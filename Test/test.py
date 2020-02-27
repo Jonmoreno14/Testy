@@ -1,9 +1,7 @@
 from tkinter import *
-
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import matplotlib.pyplot as plt
-
-# Implement the default Matplotlib key bindings.
+from tkinter import colorchooser
 from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
 import random
@@ -26,13 +24,20 @@ def colory():
         colors = ["#52489c", "#f45b69", "#59c3c3", "#4062bb", "#ebebeb"]
         colorVar.set(colorOptions[1])
     elif val == "color way 3":
-        colors = ["#f4f1de", "#e07a5f", "#3d405b", "#81b29a", "#f2cc8f"]
+        colors = ["#f4f1de", "#e07a5f", "#b79fad", "#81b29a", "#f2cc8f"]
         colorVar.set(colorOptions[2])
     else:
-        colors = ["#ac7b84", "#385f71", "#ff5666", "#1affd5", "#cacaaa"]
+        colors = ["#ac7b84", "#556f7a", "#ff5666", "#1affd5", "#cacaaa"]
         colorVar.set(colorOptions[3])
     return colors
 
+
+def bgColor():
+    clr = colorchooser.askcolor(title="select color")
+    lvlFrac.configure(background=clr[1])
+
+
+colorButton = Button(lvlFrac, text="Color Selector", command=bgColor).place(x=30, y=600)
 
 numBox = Label(lvlFrac, text="1", font=("Ariel", 40))
 
@@ -65,6 +70,7 @@ def draw(val):
         shadow=False,
         startangle=90,
         counterclock=FALSE,
+        wedgeprops={"edgecolor": "k", "linewidth": 2, "antialiased": True,},
     )
     plt.rcParams["font.size"] = 14
 
@@ -99,3 +105,30 @@ numBox.place(x=width / 2, y=height - 160)
 
 
 lvlFrac.mainloop()
+
+"""
+
+
+def bgFunc():
+    val = bgVar.get()
+    if val == "Blocks":
+        background = ["#595959", "#ec4e20", "#ff9505", "#016fb9"]
+        bgVar.set(bgOptions[0])
+    elif val == "Legos":
+        background = ["#52489c", "#f45b69", "#59c3c3", "#4062bb", "#ebebeb"]
+        bgVar.set(bgOptions[1])
+    else:
+        background = ["#f4f1de", "#e07a5f", "#b79fad", "#81b29a", "#f2cc8f"]
+        bgVar.set(bgOptions[2])
+    return background
+
+
+bgVar = StringVar(lvlFrac)
+bgOptions = ["Blocks", "Legos", "Paper"]
+bgVar.set(bgOptions[0])
+bgSelector = OptionMenu(lvlFrac, bgVar, *bgOptions, command=bgFunc())
+bgSelector.config(width=10)
+bgSelector.place(x=1, y=900)
+
+
+"""
