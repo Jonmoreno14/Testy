@@ -35,10 +35,15 @@ def colory():
 def bgColor():
     clr = colorchooser.askcolor(title="select color")
     lvlFrac.configure(background=clr[1])
+    numBox.configure(background=clr[1])
+    customization.configure(background=clr[1])
 
 
-colorButton = Button(lvlFrac, text="Color Selector", command=bgColor).place(x=30, y=600)
-
+customization = Label(lvlFrac, text="Customization", font=("Ariel 24 underline"))
+customization.place(x=30, y=550)
+# customization.configure(underline=True)
+colorButton = Button(lvlFrac, text="Color Selector", command=bgColor)
+colorButton.place(x=30, y=600)
 numBox = Label(lvlFrac, text="1", font=("Ariel", 40))
 
 
@@ -87,7 +92,7 @@ colorOptions = ["color way 1", "color way 2", "color way 3", "color way 4"]
 colorVar.set(colorOptions[0])
 colorSelector = OptionMenu(lvlFrac, colorVar, *colorOptions, command=colory())
 colorSelector.config(width=10)
-colorSelector.place(x=1, y=900)
+colorSelector.place(x=30, y=660)
 
 draw(numBox.cget("text"))
 slider = Scale(
