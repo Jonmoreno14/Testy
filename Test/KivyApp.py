@@ -36,7 +36,7 @@ class GameSelector():
 
         backBtn = Button(pos_hint = {"x": .01, 'y':.83}, size_hint =  (.141, .07),
                         background_color = (1, 1, 1, .01))
-        backBtn.bind(on_release=MainWindow)
+        #backBtn.bind(on_release=MyMainApp.run())
         
         Fl.add_widget(logo)
         Fl.add_widget(fractionEq)
@@ -93,9 +93,9 @@ class MainWindow():
             print("User "+str(MainWindow.userInput.text) + " was created!")
             GameSelector.miniMenu()
         except:
-            wrong = Label(text='Enter your name!', color= (1, 0, 0, 1),
-                    pos_hint= {"x": .4, 'y':.25}, font_size=36 , size_hint= (.2, .1))
-            Fl.add_widget(wrong)
+            student = str(MainWindow.userInput.text)
+            print(student)
+            GameSelector.miniMenu()
 
     logo =      Image(source = '/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png', 
                 allow_stretch= True, pos_hint= {"x": .01, 'y':.9}, size_hint=(.2, .1))
