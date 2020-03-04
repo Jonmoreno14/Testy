@@ -13,6 +13,7 @@ from kivy.uix.slider import Slider
 from kivy.graphics import  Rectangle, Color, Line
 from kivy.uix.widget import Widget
 from kivy.properties  import NumericProperty
+import random
 import sqlite3
 import hashlib
 Window.clearcolor = (1, 1, 1, 1)
@@ -39,6 +40,11 @@ def FractionEq(self):
     
     def sliderValFunc(instance, val):
         sliderVal.text = "%d"%val
+    
+    def newQuestionFunc(self):
+        import Fractions
+        randomQuestion = Fractions.level1()
+        questionLabel.text = randomQuestion
         
     wid = Widget()
     logo =  Image(source = '/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png', 
@@ -51,12 +57,15 @@ def FractionEq(self):
                     background_color = (1, 1, 1, .01))
     backBtn.bind(on_release=goBack)
 
+    questionLabel = Label(text='1/2',font_size=68, color=(.1,.1,.1,1) ,pos_hint={'x':.5,'y':.93}, size_hint=(.001,.001))
+
     slider = Slider(min = 1, max = 28, step=1, pos_hint={'x':.2, 'y':.15}, size_hint=(.6,.05))
     slider.bind(value=sliderValFunc)
 
     sliderVal = Label(text='1', font_size=68, color=(.1,.1,.1,1) ,pos_hint={'x':.5,'y':.22}, size_hint=(.001,.001))
     
     newQuestionBtn = Button(text='New Question', size_hint=(.1,.08),pos_hint={'x':.25, 'y':.05})
+    newQuestionBtn.bind(on_release=newQuestionFunc)
 
     checkAnswerBtn = Button(text='Check Answer', size_hint=(.1,.08),pos_hint={'x':.65, 'y':.05})
 
@@ -71,6 +80,7 @@ def FractionEq(self):
     Fl.add_widget(backBtnImage)
     Fl.add_widget(backBtn)
     Fl.add_widget(slider)
+    Fl.add_widget(questionLabel)
     Fl.add_widget(sliderVal)
     Fl.add_widget(newQuestionBtn)
     Fl.add_widget(checkAnswerBtn)
