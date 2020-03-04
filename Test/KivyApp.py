@@ -13,6 +13,7 @@ from kivy.uix.slider import Slider
 from kivy.graphics import Rectangle, Color, Line
 from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty
+import Fractions
 import random
 import sqlite3
 import hashlib
@@ -51,11 +52,12 @@ def FractionEq(self):
         sliderVal.text = "%d" % val
 
     def newQuestionFunc(self):
-        import Fractions
         randomQuestion = Fractions.level1()
         questionLabel.text = randomQuestion
         currFraction = questionLabel.text.split("/")
         denominator = int(currFraction[1])
+        Fl.clear_widgets()
+        FractionEq(self)
 
     wid = Widget()
     wid1 = Widget()
@@ -77,7 +79,7 @@ def FractionEq(self):
                      background_color=(1, 1, 1, .01))
     backBtn.bind(on_release=goBack)
 
-    questionLabel = Label(text='1/2',
+    questionLabel = Label(text=Fractions.level1(),
                           font_size=68,
                           color=(.1, .1, .1, 1),
                           pos_hint={'x': .5, 'y': .93},
@@ -122,7 +124,8 @@ def FractionEq(self):
     with wid1.canvas:
         Color(.1, .1, .1)
         for x in range(1, denominator):
-            line = Line(points=[(((width/denominator) * x) + Fl.size[0] / 5), (Fl.height * (13 / 15)), (((width/denominator) * x) + Fl.size[0] / 5), (Fl.height * (5 / 18))],
+            line = Line(points=[(((width/denominator) * x) + Fl.size[0] / 5), (Fl.height * (13 / 15)),
+                                (((width/denominator) * x) + Fl.size[0] / 5), (Fl.height * (5 / 18))],
                         dash_length=60, dash_offset=60, width=1, color=(.23, .6, .2))
 
     wid1.bind(pos=update_line)
