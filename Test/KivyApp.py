@@ -4,8 +4,13 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.core.window import Window
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
+from kivy.lang import Builder
 from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 from kivy.uix.image import Image
+from kivy.graphics import  Rectangle, Color, Triangle
+from kivy.uix.widget import Widget
+from kivy.config import Config
 import sqlite3
 import hashlib
 Window.clearcolor = (1, 1, 1, 1)
@@ -19,11 +24,76 @@ cursor.execute(
 
 Fl = FloatLayout()
 
+def FractionEq(self):
+    def goBack(self):
+        Fl.clear_widgets()
+        GameSelector(self)
+
+    def update_rect(*args):
+        width = Fl.size[0]/2
+        height = Fl.size[1]/2
+        rec.pos = ((width/2), (height/2))
+        rec.size = (width,height)
+        
+        
+
+    wid = Widget()
+    logo =  Image(source = '/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png', 
+                allow_stretch= True, pos_hint= {"x": .01, 'y':.9}, size_hint=(.2, .1))
+
+    backBtnImage = Image(source = '/Users/jonathonmoreno/Desktop/SE/Test/Images/eback-button-6-921315_2_15.png',pos_hint = {"x": .01, 'y':.83}, size_hint =  (.04, .07),
+                keep_ratio = True)
+
+    backBtn = Button(pos_hint = {"x": .01, 'y':.83}, size_hint =  (.141, .07),
+                    background_color = (1, 1, 1, .01))
+    backBtn.bind(on_release=goBack)
+
+    with wid.canvas:
+        Color(.3,.2,.1)
+        rec = Rectangle(size=(Fl.width/2,Fl.height/2), pos=((Fl.width/2)-(Fl.width/4),(Fl.height/2)-(Fl.height/4)))
+
+    wid.bind(pos=update_rect)
+    wid.bind(size=update_rect)
+
+    Fl.add_widget(logo)
+    Fl.add_widget(backBtnImage)
+    Fl.add_widget(backBtn)
+    Fl.add_widget(wid)
+    
+
+def PieFraction(self):
+
+    def goBack(self):
+        Fl.clear_widgets()
+        GameSelector(self)
+    logo =  Image(source = '/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png', 
+                allow_stretch= True, pos_hint= {"x": .01, 'y':.9}, size_hint=(.2, .1))
+
+    backBtnImage = Image(source = '/Users/jonathonmoreno/Desktop/SE/Test/Images/eback-button-6-921315_2_15.png',pos_hint = {"x": .01, 'y':.83}, size_hint =  (.04, .07),
+                keep_ratio = True)
+
+    backBtn = Button(pos_hint = {"x": .01, 'y':.83}, size_hint =  (.141, .07),
+                    background_color = (1, 1, 1, .01))
+    backBtn.bind(on_release=goBack)
+
+    Fl.add_widget(logo)
+    Fl.add_widget(backBtnImage)
+    Fl.add_widget(backBtn)
+
+
 def GameSelector(self):
 
     def goBack(self):
         Fl.clear_widgets()
         MainWindow(self)
+
+    def goFrac(self):
+        Fl.clear_widgets()
+        FractionEq(self)
+
+    def goPie(self):
+        Fl.clear_widgets()
+        PieFraction(self)
 
    
     Fl.clear_widgets()
@@ -32,9 +102,11 @@ def GameSelector(self):
                 allow_stretch= True, pos_hint= {"x": .01, 'y':.9}, size_hint=(.2, .1))
     fractionEq = Button(text='Fraction Equivilence',pos_hint = {"x": .3, 'y':.6}, font_size=46 ,size_hint =  (.4, .25), color = (0, 0, 0, 1),
                 background_color = (1, 1, 1, .6))
+    fractionEq.bind(on_release=goFrac)
 
     pieFraction = Button(text='Pie Fractions',pos_hint = {"x": .3, 'y':.2}, font_size=46 ,size_hint =  (.4, .25), color = (0, 0, 0, 1),
                 background_color = (1, 1, 1, .6))
+    pieFraction.bind(on_release=goPie)
 
     backBtnImage = Image(source = '/Users/jonathonmoreno/Desktop/SE/Test/Images/eback-button-6-921315_2_15.png',pos_hint = {"x": .01, 'y':.83}, size_hint =  (.04, .07),
                 keep_ratio = True)
@@ -48,18 +120,10 @@ def GameSelector(self):
     Fl.add_widget(pieFraction)
     Fl.add_widget(backBtnImage)
     Fl.add_widget(backBtn)
-
-    #return Fl
-        
-
-def FractionEq():
-    pass
-
-def PieFraction():
-    pass
+ 
 
 def MainWindow(self):
-    
+
     def teacherFunc(self): 
 
         def submitFunc2(self):
