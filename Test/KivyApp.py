@@ -1,3 +1,4 @@
+#!/usr/local/bin/python3
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.floatlayout import FloatLayout
@@ -8,9 +9,10 @@ from kivy.lang import Builder
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
-from kivy.graphics import  Rectangle, Color, Triangle
+from kivy.uix.slider import Slider
+from kivy.graphics import  Rectangle, Color, Line
 from kivy.uix.widget import Widget
-from kivy.config import Config
+from kivy.properties  import NumericProperty
 import sqlite3
 import hashlib
 Window.clearcolor = (1, 1, 1, 1)
@@ -30,13 +32,14 @@ def FractionEq(self):
         GameSelector(self)
 
     def update_rect(*args):
-        width = Fl.size[0]/2
-        height = Fl.size[1]/2
-        rec.pos = ((width/2), (height/2))
+        width = Fl.size[0] / 5 * 3
+        height = Fl.size[1] / 5 * 3
+        rec.pos = ((Fl.width/5), (Fl.height*(3/11)))
         rec.size = (width,height)
+    
+    def sliderValFunc(instance, val):
+        sliderVal.text = "%d"%val
         
-        
-
     wid = Widget()
     logo =  Image(source = '/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png', 
                 allow_stretch= True, pos_hint= {"x": .01, 'y':.9}, size_hint=(.2, .1))
@@ -48,6 +51,15 @@ def FractionEq(self):
                     background_color = (1, 1, 1, .01))
     backBtn.bind(on_release=goBack)
 
+    slider = Slider(min = 1, max = 28, step=1, pos_hint={'x':.2, 'y':.15}, size_hint=(.6,.05))
+    slider.bind(value=sliderValFunc)
+
+    sliderVal = Label(text='1', font_size=68, color=(.1,.1,.1,1) ,pos_hint={'x':.5,'y':.22}, size_hint=(.001,.001))
+    
+    newQuestionBtn = Button(text='New Question', size_hint=(.1,.08),pos_hint={'x':.25, 'y':.05})
+
+    checkAnswerBtn = Button(text='Check Answer', size_hint=(.1,.08),pos_hint={'x':.65, 'y':.05})
+
     with wid.canvas:
         Color(.3,.2,.1)
         rec = Rectangle(size=(Fl.width/2,Fl.height/2), pos=((Fl.width/2)-(Fl.width/4),(Fl.height/2)-(Fl.height/4)))
@@ -58,10 +70,16 @@ def FractionEq(self):
     Fl.add_widget(logo)
     Fl.add_widget(backBtnImage)
     Fl.add_widget(backBtn)
+    Fl.add_widget(slider)
+    Fl.add_widget(sliderVal)
+    Fl.add_widget(newQuestionBtn)
+    Fl.add_widget(checkAnswerBtn)
     Fl.add_widget(wid)
     
 
 def PieFraction(self):
+    def draw():
+        pass
 
     def goBack(self):
         Fl.clear_widgets()
@@ -145,7 +163,7 @@ def MainWindow(self):
                     pos_hint= {"x": .01, 'y':.35}, font_size=46 , size_hint= (.2, .1))
 
         passInput = TextInput(multiline = False, pos_hint = {"x": .3, 'y':.36}, 
-                    font_size = 46, size_hint = (.4, .07), password = True, cursor_blink = True, padding_x=50, padding_y=30, write_tab = False)
+                    font_size = 46, size_hint = (.4, .07), password = True, cursor_blink = True, write_tab = False)
 
         submitBtn2 = Button(text = "Submit",pos_hint = {"x": .38, 'y':.03}, size_hint =  (.25, .15), color = (0, 0, 0, 1),
                     background_color = (1, 1, 1, .6))
@@ -174,7 +192,7 @@ def MainWindow(self):
                 pos_hint= {"x": .026, 'y':.59}, font_size=46 , size_hint= (.2, .1))
 
     userInput = TextInput(multiline = False, pos_hint = {"x": .30, 'y':.6}, 
-                font_size = 46, size_hint = (.4, .07), cursor_blink = True, padding_x=50, padding_y=30, write_tab = False)
+                font_size = 46, size_hint = (.4, .07), cursor_blink = True, write_tab = False)
 
     submitBtn = Button(text = "Submit",pos_hint = {"x": .38, 'y':.03}, size_hint =  (.25, .15), color = (0, 0, 0, 1),
                 background_color = (1, 1, 1, .6))
