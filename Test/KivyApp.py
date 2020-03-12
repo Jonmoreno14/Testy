@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3
 from kivy.app import App
 from kivy.lang import Builder
+import os
 from kivy.uix.floatlayout import FloatLayout
 from kivy.core.window import Window
 from kivy.uix.button import Button
@@ -13,6 +14,8 @@ from kivy.uix.slider import Slider
 from kivy.graphics import Rectangle, Color, Line
 from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty
+from subprocess import call
+import teacherGradeViewer
 import Fractions
 import random
 import sqlite3
@@ -238,6 +241,11 @@ def MainWindow(self):
             conn.commit()
             if cursor.fetchone() is not None:
                 print("Welcome")
+                Fl.clear_widgets()
+                # App.get_running_app().stop()
+                #call(["python", "rip.py"])
+                #os.system('python rip.py')
+                teacherGradeViewer.runApp()
             else:
                 wrong = Label(text='Incorrect password!',
                               color=(1, 0, 0, 1),
@@ -245,7 +253,6 @@ def MainWindow(self):
                               font_size=36,
                               size_hint=(.2, .1))
                 Fl.add_widget(wrong)
-            GameSelector(self)
 
         Fl.remove_widget(submitBtn)
         passLabel = Label(text='Enter your password:',
@@ -274,17 +281,25 @@ def MainWindow(self):
         Fl.add_widget(submitBtn2)
 
     def submitFunc(self):
-        try:
-            sql = "INSERT INTO login(user,password) VALUES('" + str(
-                userInput.text) + "',NULL)"
-            cursor.execute(sql)
-            conn.commit()
-            print("User " + str(userInput.text) + " was created!")
-            GameSelector(self)
-        except:
-            student = str(userInput.text)
-            print(student)
-            GameSelector(self)
+        if str(userInput.text) == "":
+            errorMessage = Label(text="Enter a name!",
+                                 color=(1, 0, 0, 1),
+                                 pos_hint={"x": .4, 'y': .25},
+                                 font_size=36,
+                                 size_hint=(.2, .1))
+            Fl.add_widget(errorMessage)
+        else:
+            try:
+                sql = "INSERT INTO login(user,password) VALUES('" + str(
+                    userInput.text) + "',NULL)"
+                cursor.execute(sql)
+                conn.commit()
+                print("User " + str(userInput.text) + " was created!")
+                GameSelector(self)
+            except:
+                student = str(userInput.text)
+                print(student)
+                GameSelector(self)
 
     logo = Image(
         source='/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
