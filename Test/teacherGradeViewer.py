@@ -2,6 +2,12 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.recycleview import RecycleView
 import sqlite3
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.image import Image
+from kivy.uix.widget import Widget
+
 
 Builder.load_string('''
 <RV>:

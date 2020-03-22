@@ -51,6 +51,14 @@ def FractionEq(self):
             line.dash_length = 60
             line.dash_offset = 60
 
+    def update_numerator(*args):
+        width = ((Fl.size[0] / 5 * 3) / denominator) * numerator
+        height = Fl.size[1] / 5 * 3
+        line.dash_length = 60
+        line.dash_offset = 60
+        rec2.pos = ((Fl.width / 5), (Fl.height * (3 / 11)))
+        rec2.size = (width, height)
+
     def sliderValFunc(instance, val):
         sliderVal.text = "%d" % val
 
@@ -64,6 +72,7 @@ def FractionEq(self):
 
     wid = Widget()
     wid1 = Widget()
+    wid2 = Widget()
 
     logo = Image(
         source='/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
@@ -111,6 +120,7 @@ def FractionEq(self):
                             pos_hint={'x': .65, 'y': .05})
 
     currFraction = questionLabel.text.split("/")
+    numerator = int(currFraction[0])
     denominator = int(currFraction[1])
 
     width = Fl.size[0] / 5 * 3
@@ -121,6 +131,7 @@ def FractionEq(self):
         rec = Rectangle(size=(width, height),
                         pos=((Fl.width / 2) - (Fl.width / 4),
                              (Fl.height / 2) - (Fl.height / 4)))
+
     wid.bind(pos=update_rect)
     wid.bind(size=update_rect)
 
@@ -134,6 +145,15 @@ def FractionEq(self):
     wid1.bind(pos=update_line)
     wid1.bind(size=update_line)
 
+    with wid2.canvas:
+        Color(.3, .3, .6)
+        rec2 = Rectangle(size=((width / denominator)*numerator, height),
+                         pos=((Fl.width / 2) - (Fl.width / 3),
+                              (Fl.height / 2) - (Fl.height / 4)))
+
+    wid2.bind(pos=update_numerator)
+    wid2.bind(size=update_numerator)
+
     Fl.add_widget(logo)
     Fl.add_widget(backBtnImage)
     Fl.add_widget(backBtn)
@@ -144,6 +164,7 @@ def FractionEq(self):
     Fl.add_widget(checkAnswerBtn)
     Fl.add_widget(wid)
     Fl.add_widget(wid1)
+    Fl.add_widget(wid2)
 
 
 def PieFraction(self):
