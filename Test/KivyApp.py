@@ -66,8 +66,6 @@ def FractionEq(self):
         for x in range(1, slider.value):
             line2.points = [((width/slider.value) * x) + Fl.size[0] / 5, (Fl.height * (13 / 15)),
                             ((width/slider.value) * x) + Fl.size[0] / 5, (Fl.height * (5 / 18))]
-            line2.dash_length = 60
-            line2.dash_offset = 60
 
     def sliderLines():
         with wid3.canvas:
@@ -95,6 +93,15 @@ def FractionEq(self):
         denominator = int(currFraction[1])
         Fl.clear_widgets()
         FractionEq(self)
+
+    def answerChecker(self):
+        if int(slider.value) % denominator == 0:
+            equivNumerator = int(slider.value) / denominator
+            equiviFrac = int(equivNumerator) * numerator
+            response = "%i/%i" % (equiviFrac, int(slider.value))
+            print("Correct")
+        else:
+            print("Wrong")
 
     wid = Widget()
     wid1 = Widget()
@@ -144,6 +151,7 @@ def FractionEq(self):
     checkAnswerBtn = Button(text='Check Answer',
                             size_hint=(.1, .08),
                             pos_hint={'x': .65, 'y': .05})
+    checkAnswerBtn.bind(on_release=answerChecker)
 
     currFraction = questionLabel.text.split("/")
     numerator = int(currFraction[0])
