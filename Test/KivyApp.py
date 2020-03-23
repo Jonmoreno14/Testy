@@ -26,9 +26,10 @@ Window.size = (1200, 800)
 conn = sqlite3.connect("UserInfo.db")
 cursor = conn.cursor()
 cursor.execute(
-    "CREATE TABLE IF NOT EXISTS login(user TEXT NOT NULL, password TEXT);")
+    "CREATE TABLE IF NOT EXISTS login(user TEXT NOT NULL, password TEXT, incorrect TEXT);")
 
 Fl = FloatLayout()
+wid3 = Widget()
 
 
 def FractionEq(self):
@@ -59,8 +60,33 @@ def FractionEq(self):
         rec2.pos = ((Fl.width / 5), (Fl.height * (3 / 11)))
         rec2.size = (width, height)
 
+    def update_sliderNum(*args):
+        width = Fl.size[0] / 5 * 3
+        height = Fl.size[1] / 5 * 3
+        for x in range(1, slider.value):
+            line2.points = [((width/slider.value) * x) + Fl.size[0] / 5, (Fl.height * (13 / 15)),
+                            ((width/slider.value) * x) + Fl.size[0] / 5, (Fl.height * (5 / 18))]
+            line2.dash_length = 60
+            line2.dash_offset = 60
+
+    def sliderLines():
+        with wid3.canvas:
+            wid3.canvas.clear()
+            Color(.1, .1, .1)
+            for x in range(1, slider.value):
+                line2 = Line(points=[(((width/slider.value) * x) + Fl.size[0] / 5), (Fl.height * (13 / 15)),
+                                     (((width/slider.value) * x) + Fl.size[0] / 5), (Fl.height * (5 / 18))],
+                             width=4, color=(.23, .6, .2))
+
+        # wid3.bind(pos=update_sliderNum)
+        # wid3.bind(size=update_sliderNum)
+        Fl.add_widget(wid3)
+
     def sliderValFunc(instance, val):
         sliderVal.text = "%d" % val
+        Fl.remove_widget(wid3)
+        sliderLines()
+        return sliderVal.text
 
     def newQuestionFunc(self):
         randomQuestion = Fractions.level1()
@@ -126,6 +152,7 @@ def FractionEq(self):
     width = Fl.size[0] / 5 * 3
     height = Fl.size[1] / 5 * 3
 
+    # draws blank canvas
     with wid.canvas:
         Color(.9, .9, .9)
         rec = Rectangle(size=(width, height),
@@ -135,6 +162,7 @@ def FractionEq(self):
     wid.bind(pos=update_rect)
     wid.bind(size=update_rect)
 
+    # draws smallest denominator lines
     with wid1.canvas:
         Color(.1, .1, .1)
         for x in range(1, denominator):
@@ -145,6 +173,7 @@ def FractionEq(self):
     wid1.bind(pos=update_line)
     wid1.bind(size=update_line)
 
+    # draws numerator box
     with wid2.canvas:
         Color(.3, .3, .6)
         rec2 = Rectangle(size=((width / denominator)*numerator, height),
@@ -153,6 +182,9 @@ def FractionEq(self):
 
     wid2.bind(pos=update_numerator)
     wid2.bind(size=update_numerator)
+
+    # draws slider lines
+    # make this a function!!
 
     Fl.add_widget(logo)
     Fl.add_widget(backBtnImage)
@@ -264,8 +296,8 @@ def MainWindow(self):
                 print("Welcome")
                 Fl.clear_widgets()
                 # App.get_running_app().stop()
-                #call(["python", "rip.py"])
-                #os.system('python rip.py')
+                # call(["python", "rip.py"])
+                # os.system('python rip.py')
                 teacherGradeViewer.runApp()
             else:
                 wrong = Label(text='Incorrect password!',

@@ -31,7 +31,7 @@ class RV(RecycleView):
             cursor.execute(sqlite_select_query)
             records = cursor.fetchall()
 
-            self.data = [{'text': str(row[0]), 'color': (0, 0, 0, 1)}
+            self.data = [{'text': str(row[0]) + " Incorrect: " + str(row[2]), 'color': (0, 0, 0, 1)}
                          for row in records]
             cursor.close()
 
