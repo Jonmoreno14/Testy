@@ -98,10 +98,21 @@ def FractionEq(self):
         if int(slider.value) % denominator == 0:
             equivNumerator = int(slider.value) / denominator
             equiviFrac = int(equivNumerator) * numerator
+            newFrac = "%i/%i" % (equiviFrac, slider.value)
             response = "%i/%i" % (equiviFrac, int(slider.value))
-            print("Correct")
+            correctResp = Label(text='%s is equal to %s' % (str(questionLabel.text), str(newFrac)),
+                                color=(0, 0, 0, 1),
+                                font_size=62,
+                                pos_hint={"x": .4, 'y': .06},
+                                size_hint=(.2, .1))
+            Fl.add_widget(correctResp)
         else:
-            print("Wrong")
+            incorrectResp = Label(text='Wrong!',
+                                  color=(0, 0, 0, 1),
+                                  font_size=62,
+                                  pos_hint={"x": .4, 'y': .06},
+                                  size_hint=(.2, .1))
+            Fl.add_widget(incorrectResp)
 
     wid = Widget()
     wid1 = Widget()
