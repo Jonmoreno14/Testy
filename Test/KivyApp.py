@@ -11,7 +11,7 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.image import Image
 from kivy.uix.slider import Slider
-from kivy.graphics import Rectangle, Color, Line
+from kivy.graphics import Rectangle, Color, Line, Ellipse
 from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty
 from subprocess import call
@@ -219,8 +219,50 @@ def FractionEq(self):
 
 
 def PieFraction(self):
+    width = Fl.size[0] / 5 * 2
+    cwid = Widget()
+
+    cirLabel = Label(text="each slice is 100% of the circle",
+                     color=(0, 0, 0, 1),
+                     font_size=62,
+                     pos_hint={"x": .4, 'y': .06},
+                     size_hint=(.2, .1))
+
     def draw():
-        pass
+        def update_cir(*args):
+            width = Fl.size[0] / 5 * 2
+            cir.pos = ((Fl.width / 2) - (Fl.width / 5),
+                       (Fl.width / 2) - (Fl.width / 3))
+            cir.size = (width, width)
+
+        with cwid.canvas:
+            for x in range(slider.value):
+                Color(random.random(), random.random(), random.random())
+                cir = Ellipse(
+                    size=(width, width),
+                    pos=((Fl.width / 2) - (Fl.width / 5),
+                         (Fl.width / 2) - (Fl.width / 3)),
+                    angle_start=(360 / slider.value) * x,
+                    angle_end=((360 / slider.value) * x) +
+                    (360 / slider.value),
+                )
+                cwid.bind(pos=update_cir)
+                cwid.bind(size=update_cir)
+                update_cir()
+
+        Fl.add_widget(cwid)
+        update_cir()
+        return cirLabel
+
+    def sliderValFunc(instance, val):
+        sliderVal.text = "%d" % val
+        Fl.remove_widget(cwid)
+        cwid.canvas.clear()
+        draw()
+        cirLabel.text = "each slice is " + \
+            str(format(100/slider.value, '.2f'))+"% of the circle"
+
+        return sliderVal.text
 
     def goBack(self):
         Fl.clear_widgets()
@@ -243,9 +285,27 @@ def PieFraction(self):
                      background_color=(1, 1, 1, .01))
     backBtn.bind(on_release=goBack)
 
+    slider = Slider(min=1,
+                    max=24,
+                    step=1,
+                    pos_hint={'x': .2, 'y': .15},
+                    size_hint=(.6, .05))
+    slider.bind(value=sliderValFunc)
+
+    sliderVal = Label(text='1',
+                      font_size=68,
+                      color=(.1, .1, .1, 1),
+                      pos_hint={'x': .5, 'y': .22},
+                      size_hint=(.001, .001))
+
+    draw()
+
     Fl.add_widget(logo)
     Fl.add_widget(backBtnImage)
     Fl.add_widget(backBtn)
+    Fl.add_widget(slider)
+    Fl.add_widget(sliderVal)
+    Fl.add_widget(cirLabel)
 
 
 def GameSelector(self):
@@ -434,3 +494,20 @@ class MyMainApp(App):
 
 if __name__ == "__main__":
     MyMainApp().run()
+
+
+'''
+
+ with cwid.canvas:
+            Color(1, 0, 0)
+            for x in range(slider.value):
+                cir = Ellipse(
+                    size=(width, width),
+                    pos=((Fl.width / 2) - (Fl.width / 5),
+                         (Fl.width / 2) - (Fl.width / 3)),
+                    angle_start=(360 / slider.value) * x,
+                    angle_end=((360 / slider.value) * x) + slider.value
+                )
+
+
+'''
