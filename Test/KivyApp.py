@@ -1,3 +1,10 @@
+#TODO on correct answer the feedback text (example: 1/6 is equal to 1/6)
+#    doesn't adjust to screen size and covers up "new question" and "check answer"
+#    buttons
+#TODO add fireworks animation
+#TODO pie chart could be adjusted to fit better to screen
+#TODO optional, back button to menu
+
 #!/usr/local/bin/python3
 from kivy.app import App
 from kivy.lang import Builder
@@ -13,7 +20,9 @@ from kivy.uix.image import Image
 from kivy.uix.slider import Slider
 from kivy.graphics import Rectangle, Color, Line, Ellipse
 from kivy.uix.widget import Widget
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, StringProperty
+from kivy.clock import Clock
+from kivy.core.audio import SoundLoader
 from subprocess import call
 import teacherGradeViewer
 import Fractions
@@ -30,6 +39,10 @@ cursor.execute(
 
 Fl = FloatLayout()
 wid3 = Widget()
+
+#load sounds
+rightSound = SoundLoader.load('Audio/success.ogg')
+wrongSound = SoundLoader.load('Audio/wrong.ogg')
 
 
 def FractionEq(self):
@@ -100,6 +113,10 @@ def FractionEq(self):
             equiviFrac = int(equivNumerator) * numerator
             newFrac = "%i/%i" % (equiviFrac, slider.value)
             response = "%i/%i" % (equiviFrac, int(slider.value))
+            checkAnswerBtn.background_normal=''
+            checkAnswerBtn.background_color=(.1,.7,.2,.9)
+            rightSound.play()
+            rightResponse = TimedRightResponse()
             correctResp = Label(text='%s is equal to %s' % (str(questionLabel.text), str(newFrac)),
                                 color=(0, 0, 0, 1),
                                 font_size=62,
@@ -107,25 +124,67 @@ def FractionEq(self):
                                 size_hint=(.2, .1))
             Fl.add_widget(correctResp)
         else:
-            incorrectResp = Label(text='Wrong!',
+            wrongSound.play()
+            checkAnswerBtn.background_normal=('')
+            checkAnswerBtn.background_color=(1,.3,.3,.9)
+            checkAnswerBtn.text=("TRY AGAIN")
+            wrongResponse = TimedWrongResponse()
+            '''incorrectResp = Label(text='Wrong!',
                                   color=(0, 0, 0, 1),
                                   font_size=62,
                                   pos_hint={"x": .4, 'y': .06},
                                   size_hint=(.2, .1))
-            Fl.add_widget(incorrectResp)
+            Fl.add_widget(incorrectResp)'''
+
+    class TimedRightResponse(Widget):
+        myCount = 0
+        boolRun = True
+        def __init__(self, **kwargs):
+            Clock.schedule_interval(self.update, 1)
+            super(TimedRightResponse, self).__init__(**kwargs)
+        def update(self,*args):
+            if self.boolRun == True:
+                if self.myCount < 1:
+                    print(self.myCount)
+                    self.myCount += 1
+                else:
+                    checkAnswerBtn.background_color = (.4,.4,.4,1)
+                    checkAnswerBtn.text = 'Check Answer'
+                    self.myCount = 0
+                    self.boolRun = False
+
+    class TimedWrongResponse(Widget):
+        myCount = 0
+        boolRun = True
+        def __init__(self, **kwargs):
+            Clock.schedule_interval(self.update, 1)
+            super(TimedWrongResponse, self).__init__(**kwargs)
+        def update(self,*args):
+            if self.boolRun == True:
+                if self.myCount < 1:
+                    print(self.myCount)
+                    self.myCount += 1
+                else:
+                    checkAnswerBtn.background_color = (.4,.4,.4,1)
+                    checkAnswerBtn.text = 'Check Answer'
+                    self.myCount = 0
+                    self.boolRun = False
+    
+    
+                
 
     wid = Widget()
     wid1 = Widget()
     wid2 = Widget()
 
     logo = Image(
-        source='/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
+        source='Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
         allow_stretch=True,
         pos_hint={"x": .01, 'y': .9},
         size_hint=(.2, .1))
 
     backBtnImage = Image(
-        source='/Users/jonathonmoreno/Desktop/SE/Test/Images/eback-button-6-921315_2_15.png',
+        source='Images/eback-button-6-921315_2_15.png',
         pos_hint={"x": .01, 'y': .83},
         size_hint=(.04, .07),
         keep_ratio=True)
@@ -160,6 +219,7 @@ def FractionEq(self):
     newQuestionBtn.bind(on_release=newQuestionFunc)
 
     checkAnswerBtn = Button(text='Check Answer',
+                            #background_color = (1,1,1,1),
                             size_hint=(.1, .08),
                             pos_hint={'x': .65, 'y': .05})
     checkAnswerBtn.bind(on_release=answerChecker)
@@ -269,13 +329,13 @@ def PieFraction(self):
         GameSelector(self)
 
     logo = Image(
-        source='/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
+        source='Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
         allow_stretch=True,
         pos_hint={'x': .01, 'y': .9},
         size_hint=(.2, .1))
 
     backBtnImage = Image(
-        source='/Users/jonathonmoreno/Desktop/SE/Test/Images/eback-button-6-921315_2_15.png',
+        source='Images/eback-button-6-921315_2_15.png',
         pos_hint={'x': .01, 'y': .83},
         size_hint=(.04, .07),
         keep_ratio=True)
@@ -324,7 +384,7 @@ def GameSelector(self):
     Fl.clear_widgets()
 
     logo = Image(
-        source='/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
+        source='Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
         allow_stretch=True,
         pos_hint={"x": .01, 'y': .9},
         size_hint=(.2, .1))
@@ -345,7 +405,7 @@ def GameSelector(self):
     pieFraction.bind(on_release=goPie)
 
     backBtnImage = Image(
-        source='/Users/jonathonmoreno/Desktop/SE/Test/Images/eback-button-6-921315_2_15.png',
+        source='Images/eback-button-6-921315_2_15.png',
         pos_hint={"x": .01, 'y': .83},
         size_hint=(.04, .07),
         keep_ratio=True)
@@ -434,7 +494,7 @@ def MainWindow(self):
                 GameSelector(self)
 
     logo = Image(
-        source='/Users/jonathonmoreno/Desktop/SE/Test/Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
+        source='Images/SH_box2BSHSUName_021_horizontalstack_3_29.png',
         allow_stretch=True,
         pos_hint={"x": .01, 'y': .9},
         size_hint=(.2, .1))
@@ -460,7 +520,7 @@ def MainWindow(self):
     submitBtn.bind(on_release=submitFunc)
 
     teacherHead = Image(
-        source='/Users/jonathonmoreno/Desktop/SE/Test/Images/account.png',
+        source='Images/account.png',
         pos_hint={"x": .9, 'y': .03},
         size_hint=(.04, .07),
         keep_ratio=True)
@@ -497,7 +557,6 @@ if __name__ == "__main__":
 
 
 '''
-
  with cwid.canvas:
             Color(1, 0, 0)
             for x in range(slider.value):
@@ -508,6 +567,4 @@ if __name__ == "__main__":
                     angle_start=(360 / slider.value) * x,
                     angle_end=((360 / slider.value) * x) + slider.value
                 )
-
-
 '''
