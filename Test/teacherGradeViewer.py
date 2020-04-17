@@ -33,6 +33,18 @@ class RV(RecycleView):
 
             self.data = [{'text': str(row[0]) + " Incorrect: " + str(row[2]), 'color': (0, 0, 0, 1)}
                          for row in records]
+
+            '''
+                if str(row[2]) == "None":
+                    pass
+                else:
+                    self.data = [
+                        {'text': str(row[0]) + " Incorrect: " + str(row[2]), 'color': (0, 0, 0, 1)}]
+            '''
+            '''
+            self.data = [{'text': str(row[0]) + " Incorrect: " + str(row[2]), 'color': (0, 0, 0, 1)}
+                         for row in records]
+            '''
             cursor.close()
 
         except sqlite3.Error as error:

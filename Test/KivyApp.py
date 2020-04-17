@@ -1,9 +1,9 @@
-#TODO on correct answer the feedback text (example: 1/6 is equal to 1/6)
+# TODO on correct answer the feedback text (example: 1/6 is equal to 1/6)
 #    doesn't adjust to screen size and covers up "new question" and "check answer"
 #    buttons
-#TODO add fireworks animation
-#TODO pie chart could be adjusted to fit better to screen
-#TODO optional, back button to menu
+# TODO add fireworks animation
+# TODO pie chart could be adjusted to fit better to screen
+# TODO optional, back button to menu
 
 #!/usr/local/bin/python3
 from kivy.app import App
@@ -40,9 +40,10 @@ cursor.execute(
 Fl = FloatLayout()
 wid3 = Widget()
 
-#load sounds
+# load sounds
 rightSound = SoundLoader.load('Audio/success.ogg')
 wrongSound = SoundLoader.load('Audio/wrong.ogg')
+studentName = ""
 
 
 def FractionEq(self):
@@ -113,8 +114,8 @@ def FractionEq(self):
             equiviFrac = int(equivNumerator) * numerator
             newFrac = "%i/%i" % (equiviFrac, slider.value)
             response = "%i/%i" % (equiviFrac, int(slider.value))
-            checkAnswerBtn.background_normal=''
-            checkAnswerBtn.background_color=(.1,.7,.2,.9)
+            checkAnswerBtn.background_normal = ''
+            checkAnswerBtn.background_color = (.1, .7, .2, .9)
             rightSound.play()
             rightResponse = TimedRightResponse()
             correctResp = Label(text='%s is equal to %s' % (str(questionLabel.text), str(newFrac)),
@@ -125,9 +126,24 @@ def FractionEq(self):
             Fl.add_widget(correctResp)
         else:
             wrongSound.play()
-            checkAnswerBtn.background_normal=('')
-            checkAnswerBtn.background_color=(1,.3,.3,.9)
-            checkAnswerBtn.text=("TRY AGAIN")
+            checkAnswerBtn.background_normal = ('')
+            checkAnswerBtn.background_color = (1, .3, .3, .9)
+            checkAnswerBtn.text = ("TRY AGAIN")
+            # UPDATE categories SET code = CONCAT(code, '_standard') WHERE id = 1;
+            try:
+                sql = "UPDATE login SET incorrect = incorrect || ' "+str(
+                    slider.value)+str("/")+str(denominator)+",' WHERE user = '"+studentName+"';"
+                # sql = "UPDATE login SET incorrect = incorrect || '"+str(
+                #   slider.value)+str("/")+str(denominator)+"' WHERE user = "+studentName+"; "
+                cursor.execute(sql)
+                conn.commit()
+                print(sql)
+            except:
+                sql = "UPDATE login SET incorrect = incorrect || '"+str(
+                    slider.value)+str("/")+str(denominator)+"' WHERE user = "+studentName+"; "
+                print(sql)
+                print("Failed to add inc. ans")
+
             wrongResponse = TimedWrongResponse()
             '''incorrectResp = Label(text='Wrong!',
                                   color=(0, 0, 0, 1),
@@ -139,16 +155,18 @@ def FractionEq(self):
     class TimedRightResponse(Widget):
         myCount = 0
         boolRun = True
+
         def __init__(self, **kwargs):
             Clock.schedule_interval(self.update, 1)
             super(TimedRightResponse, self).__init__(**kwargs)
-        def update(self,*args):
+
+        def update(self, *args):
             if self.boolRun == True:
                 if self.myCount < 1:
                     print(self.myCount)
                     self.myCount += 1
                 else:
-                    checkAnswerBtn.background_color = (.4,.4,.4,1)
+                    checkAnswerBtn.background_color = (.4, .4, .4, 1)
                     checkAnswerBtn.text = 'Check Answer'
                     self.myCount = 0
                     self.boolRun = False
@@ -156,22 +174,21 @@ def FractionEq(self):
     class TimedWrongResponse(Widget):
         myCount = 0
         boolRun = True
+
         def __init__(self, **kwargs):
             Clock.schedule_interval(self.update, 1)
             super(TimedWrongResponse, self).__init__(**kwargs)
-        def update(self,*args):
+
+        def update(self, *args):
             if self.boolRun == True:
                 if self.myCount < 1:
                     print(self.myCount)
                     self.myCount += 1
                 else:
-                    checkAnswerBtn.background_color = (.4,.4,.4,1)
+                    checkAnswerBtn.background_color = (.4, .4, .4, 1)
                     checkAnswerBtn.text = 'Check Answer'
                     self.myCount = 0
                     self.boolRun = False
-    
-    
-                
 
     wid = Widget()
     wid1 = Widget()
@@ -219,7 +236,7 @@ def FractionEq(self):
     newQuestionBtn.bind(on_release=newQuestionFunc)
 
     checkAnswerBtn = Button(text='Check Answer',
-                            #background_color = (1,1,1,1),
+                            # background_color = (1,1,1,1),
                             size_hint=(.1, .08),
                             pos_hint={'x': .65, 'y': .05})
     checkAnswerBtn.bind(on_release=answerChecker)
@@ -482,15 +499,17 @@ def MainWindow(self):
             Fl.add_widget(errorMessage)
         else:
             try:
-                sql = "INSERT INTO login(user,password) VALUES('" + str(
-                    userInput.text) + "',NULL)"
+                sql = "INSERT INTO login(user,password, incorrect) VALUES('" + str(
+                    userInput.text) + "',NULL, '_')"
                 cursor.execute(sql)
                 conn.commit()
                 print("User " + str(userInput.text) + " was created!")
+                global studentName
+                studentName = str(userInput.text)
                 GameSelector(self)
             except:
-                student = str(userInput.text)
-                print(student)
+                studentName = str(userInput.text)
+                studentName = str(userInput.text)
                 GameSelector(self)
 
     logo = Image(
@@ -554,17 +573,3 @@ class MyMainApp(App):
 
 if __name__ == "__main__":
     MyMainApp().run()
-
-
-'''
- with cwid.canvas:
-            Color(1, 0, 0)
-            for x in range(slider.value):
-                cir = Ellipse(
-                    size=(width, width),
-                    pos=((Fl.width / 2) - (Fl.width / 5),
-                         (Fl.width / 2) - (Fl.width / 3)),
-                    angle_start=(360 / slider.value) * x,
-                    angle_end=((360 / slider.value) * x) + slider.value
-                )
-'''
